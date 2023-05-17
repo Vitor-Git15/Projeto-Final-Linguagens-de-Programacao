@@ -1,2 +1,2 @@
 # Project-LP
-Projeto - Linguagem de Programação
+Projeto da disciplina de Linguagem de Programação
