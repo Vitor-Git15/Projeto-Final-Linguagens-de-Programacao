@@ -2,11 +2,15 @@
 
 (* Creat the body of a function expression. *)
 fun makeFunAux (n: int, xs: (plcType * string) list, e: expr): expr =
-    e (* TODO *)
+    case xs of
+      [] => e
+    | (_,x)::t => Let(x, Item(n, Var "$list"), makeFunAux(n+1, t, e))
 
 (* Create the list of arguments of a function. *)
 fun makeType (args: (plcType * string) list): plcType =
-    ListT [] (* TODO *)
+  case args of
+    [] => ListT[]
+  | (t,_)::tail => let val ListT typelist = makeType(tail) in ListT(t::typelist) end;
 
 (* Create a function expression. *)
 fun makeFun (f: string, xs: (plcType * string) list, rt: plcType, e1: expr, e2: expr): expr =
