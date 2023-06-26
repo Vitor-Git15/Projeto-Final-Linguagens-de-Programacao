@@ -39,7 +39,7 @@ fun teval (e: expr) (env: plcType env): plcType =
 
     | ConB b => BoolT
 
-    | ESeq t => ListT [] (* verificar *)
+    | ESeq t => SeqT t
 
     | Var x => lookup env x
 
