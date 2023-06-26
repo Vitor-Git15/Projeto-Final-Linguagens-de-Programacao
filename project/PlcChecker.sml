@@ -132,7 +132,7 @@ fun teval (e: expr) (env: plcType env): plcType =
 
     | List(e1) =>
         (case e1 of
-            [] => ListT []
+            [] => raise EmptySeq
           | _  => ListT (map(fn x => teval x env) e1))
 
     | Item(i, e1) =>
