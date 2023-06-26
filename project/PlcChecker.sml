@@ -100,14 +100,13 @@ fun teval (e: expr) (env: plcType env): plcType =
             | (_, _, _)      => raise IfCondNotBool
             | _              => raise UnknownType
         end
-    (*Implement*)
+
+    (* TODO *)
     | Match(v, l) =>
         let
           val t1 = teval e1 env
           val t2 = teval e2 env
         in 
-        
-    (*----------*)
 
     | Call(e1, e2) =>
         let
@@ -119,18 +118,11 @@ fun teval (e: expr) (env: plcType env): plcType =
             | FunT(_, _)   => CallTypeMisM
             | _            => NotAFunc
         end
-    (*Implement*)
+
     | List(e1) =>
         case e1 of
             [] => ListT []
-          | _  =>
-              let
-                val t1 = teval e1 env
-              in
-                case t1 of
-                  (h::t) => ListT((teval h env)::(teval h env))
-              end
-    (*----------*)
+          | _  => ListT (map(fn x => teval x env) e1)
 
     | Item(i, e1) =>
         let 
