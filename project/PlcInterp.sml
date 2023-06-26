@@ -10,6 +10,10 @@ fun eval (e: expr) (env: plcVal env): plcVal =
   case e of
 
       ConI i => IntV i
+
+    | ConB b => BoolV b
+
+    | ESeq s => (* TODO *)
       
     | Var x => lookup env x
 
@@ -44,6 +48,7 @@ fun eval (e: expr) (env: plcVal env): plcVal =
             | (";", _, _) => v2
             | _ => raise Impossible
         end
+
     | Let(x, e1, e2) =>
         let
           val v = eval e1 env
@@ -51,5 +56,19 @@ fun eval (e: expr) (env: plcVal env): plcVal =
         in
           eval e2 env'
         end
+
+    | Letrec(l1,l2,l3,l4,l5,l6) => (* TODO *)
+
+    | If(e1,e2,e3) => (* TODO *)
+
+    | Match(e1,e2,e3) => (* TODO *)
+
+    | Call(e1,e2) => (* TODO *)
+
+    | List el => (* TODO *)
+
+    | Item(i,e1) => (*TODO *)
+
+    | Anon(t,s,e1) => (* TODO *)
     
     | _ => raise Impossible
