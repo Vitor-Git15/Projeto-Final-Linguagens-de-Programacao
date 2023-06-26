@@ -14,6 +14,13 @@ exception NotFunc
 exception ListOutOfRange
 exception OpNonList
 
+fun allEquals (l: plcType list): bool =
+  let
+    val target = hd l
+  in
+    List.all (fn x => x = target) l
+  end
+
 fun checkEqualityOperatorDefined (t: plcType) = 
   case t of
       IntT         => true
@@ -21,19 +28,18 @@ fun checkEqualityOperatorDefined (t: plcType) =
     | ListT []     => true
     | ListT (h::t) => 
         if (checkEqualityOperatorDefined h)
-        then (checkEqualityOperatorDefined t)
+        then (checkEqualityOperatorDefined (ListT t))
         else false
     | SeqT s       => checkEqualityOperatorDefined s
     | _            => false
 
 fun teval (e: expr) (env: plcType env): plcType = 
   case e of
-
       ConI i => IntT
 
     | ConB b => BoolT
 
-    | ESeq(SeqT(s)) => SeqT s 
+    | ESeq t => ListT [] (* verificar *)
 
     | Var x => lookup env x
 
@@ -50,9 +56,8 @@ fun teval (e: expr) (env: plcType env): plcType =
           val t1 = teval e1 ((f, FunT(targ, tr))::(narg, targ)::env)
           val t2 = teval e2 ((f, FunT(targ, tr))::env)
         in
-          case t1 of
-              tr => t2
-            | _  => WrongRetType
+          if t1 = tr then t2 else raise WrongRetType
+        end
 
     | Prim1(opr, e1) =>
         let
@@ -62,7 +67,7 @@ fun teval (e: expr) (env: plcType env): plcType =
               ("print", _)             => ListT []
             | ("!", BoolT)             => BoolT
             | (("hd" | "tl"), SeqT ts) => ts
-            | (("hd" | "tl"), _)       => OpNonList
+            | (("hd" | "tl"), _)       => raise OpNonList
             | ("-", IntT)              => IntT
             | ("ise", SeqT _)          => BoolT
             | _                        => raise UnknownType
@@ -78,13 +83,13 @@ fun teval (e: expr) (env: plcType env): plcType =
             | (";", _, _) => t2
             | (("<" | "<="), IntT, IntT) => BoolT
             | ("::", _, SeqT t1) => SeqT t1
-            | ("::", _, _) => NotEqTypes
+            | ("::", _, _) => raise NotEqTypes
             | ("&&", BoolT, BoolT) => BoolT
-            | ("&&", _, _) => NotEqTypes
+            | ("&&", _, _) => raise NotEqTypes
             | (("=" | "!="), _, t1) => 
                 if (checkEqualityOperatorDefined t1)
                 then BoolT
-                else NotEqTypes
+                else raise NotEqTypes
             | _ => raise UnknownType
         end
     
@@ -94,48 +99,57 @@ fun teval (e: expr) (env: plcType env): plcType =
           val t1 = teval e1 env
           val t2 = teval e2 env
         in 
-          case (tc, t1, t2) of
-              (BoolT, _, t1) => t1
-            | (BoolT, _, _)  => raise DiffBrTypes
-            | (_, _, _)      => raise IfCondNotBool
-            | _              => raise UnknownType
+          if not (tc = BoolT) then raise IfCondNotBool
+          else if not (t1 = t2) then raise DiffBrTypes
+          else t1
         end
 
-    (* TODO *)
     | Match(v, l) =>
-        let
-          val t1 = teval e1 env
-          val t2 = teval e2 env
-        in 
+        (case l of
+            [] => raise NoMatchResults
+          | _  => 
+            let
+              val conditions_types = map(fn (SOME cond,_) => teval cond env | (_,_) => raise UnknownType) l
+              val return_types = map(fn (_,res) => teval res env) l
+              val expression_type = teval v env
+            in
+              if not (allEquals conditions_types) then raise MatchCondTypesDiff
+              else if expression_type = hd conditions_types then raise DiffBrTypes
+              else if not (allEquals return_types) then raise MatchResTypeDiff
+              else hd return_types
+            end)
 
-    | Call(e1, e2) =>
+    | Call (e1, e2) =>
         let
           val t1 = teval e1 env
           val t2 = teval e2 env
         in
           case t1 of
-              FunT(t2, tr) => tr
-            | FunT(_, _)   => CallTypeMisM
-            | _            => NotAFunc
-        end
+              FunT (t2, tr) => tr
+            | FunT (_, _)   => raise CallTypeMisM
+            | _            => raise NotFunc
+        end (* verificar *)
 
     | List(e1) =>
-        case e1 of
+        (case e1 of
             [] => ListT []
-          | _  => ListT (map(fn x => teval x env) e1)
+          | _  => ListT (map(fn x => teval x env) e1))
 
     | Item(i, e1) =>
         let 
           val t1 = teval e1 env
         in
           case t1 of
-              List l => 
+              ListT l => 
                 if ((i > 0) andalso (i <= List.length(l)))
                 then List.nth(l, i-1)
-                else ListOutOfRange
-            | _      => OpNonList
+                else raise ListOutOfRange
+            | _      => raise OpNonList
         end
 
-    | Anon(t, v, e1) => FunT(t, teval e1 ((v, t)::env))
-
-    | _ raise => UnknownType
+    | Anon(t, v, e1) => 
+      let
+        val t1 = teval e1 ((v, t)::env)
+      in
+        FunT (t, t1)
+      end
