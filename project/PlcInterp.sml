@@ -59,7 +59,14 @@ fun eval (e: expr) (env: plcVal env): plcVal =
 
     | Letrec(l1,l2,l3,l4,l5,l6) => (* TODO *)
 
-    | If(e1,e2,e3) => (* TODO *)
+    | If(c,e1,e2) =>
+      let
+        val res = eval c env
+      in
+        case res of
+            BoolV true => eval e1 env
+          | BoolV false => eval e2 env
+          | _ => raise Impossible
 
     | Match(e1,e2,e3) => (* TODO *)
 
