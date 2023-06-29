@@ -67,6 +67,7 @@ fun eval (e: expr) (env: plcVal env): plcVal =
             BoolV true => eval e1 env
           | BoolV false => eval e2 env
           | _ => raise Impossible
+      end
 
     | Match(e1,e2,e3) => (* TODO *)
 
