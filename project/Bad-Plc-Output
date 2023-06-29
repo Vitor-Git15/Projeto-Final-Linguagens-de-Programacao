@@ -14,3 +14,19 @@
 14. Plc Interp: 'hd' empty sequence argument.
 15. Plc Interp: 'tl' empty sequence argument.
 16. Plc Interp: value not found in match.
+1. Symbol not found.
+2. PLC Checker: Empty sequence should have a sequence type.
+3. PLC Interp: Impossible evaluate expression.
+4. PLC Interp: Impossible evaluate expression.
+5. PLC Checker: Wrong return type in function.
+6. PLC Checker: 'if' branch types differ.
+7. PLC Checker: 'if' condition not Boolean.
+8. PLC Checker: No match results.
+9. PLC Checker: Unknown operator, or type error.
+10. PLC Checker: Unknown operator, or type error.
+11. eval CALL: Not a function.
+12. PLC Checker: List index out of range.
+13. PLC Checker: Selection with operator # applied to non-list.
+14. PLC Interp: 'hd' empty sequence argument.
+15. PLC Interp: 'tl' empty sequence argument.
+16. PLC Checker: 'if' branch types differ.

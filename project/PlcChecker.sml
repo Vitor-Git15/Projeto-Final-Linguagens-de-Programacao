@@ -125,9 +125,8 @@ fun teval (e: expr) (env: plcType env): plcType =
           val t2 = teval e2 env
         in
           case t1 of
-              FunT (t2, tr) => tr
-            | FunT (_, _)   => raise CallTypeMisM
-            | _            => raise NotFunc
+              FunT(t, tr) => if t = t2 then tr else raise CallTypeMisM
+            | _             => raise NotFunc
         end (* verificar *)
 
     | List(e1) =>
@@ -152,4 +151,4 @@ fun teval (e: expr) (env: plcType env): plcType =
         val t1 = teval e1 ((v, t)::env)
       in
         FunT (t, t1)
-      end
+      end;
