@@ -3,10 +3,10 @@
 3. <fun> : Int -> Int
 4. [2, 8, 6, 720, ] : [Int]
 5. [2, 8, 6, 720, ] : [Int]
-6. PLC Checker: Type mismatch in function call.
-7. PLC Checker: Type mismatch in function call.
+6. [3, 2, 1, ] : [Int]
+7. [3, 2, 1, ] : [Int]
 8. [1, 2, 3, ] : [Int]
-9. PLC Checker: Type mismatch in function call.
+9. ([20, 40, 60, ], [22, 42, 62, ], ) : ([Int], [Int], )
 10. 1 : Int
 11. true : Bool
 12. <fun> : (Int -> Int) -> Int

@@ -27,6 +27,5 @@ fun run (e: expr) =
        | HDEmptySeq            => "PLC Interp: 'hd' empty sequence argument."
        | TLEmptySeq            => "PLC Interp: 'tl' empty sequence argument."
        | ValueNotFoundInMatch  => "PLC Interp: Value not found in match."
-       | ThisImpossible        => "-------------------IS THIS----------------------"
        | _                     => "Unexpected exception.";
        

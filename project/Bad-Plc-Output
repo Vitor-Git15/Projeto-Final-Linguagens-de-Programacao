@@ -6,11 +6,11 @@
 6. PLC Checker: 'if' branch types differ.
 7. PLC Checker: 'if' condition not Boolean.
 8. PLC Checker: No match results.
-9. PLC Checker: Unknown operator, or type error.
-10. PLC Checker: Unknown operator, or type error.
+9. PLC Checker: 'match' result types differ.
+10. PLC Checker: 'match' condition types differ matching expression's type.
 11. teval CALL: Not a function.
 12. PLC Checker: List index out of range.
 13. PLC Checker: Selection with operator # applied to non-list.
 14. PLC Interp: 'hd' empty sequence argument.
 15. PLC Interp: 'tl' empty sequence argument.
-16. PLC Checker: 'if' branch types differ.
+16. PLC Interp: Value not found in match.

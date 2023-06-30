@@ -88,7 +88,8 @@ fun teval (e: expr) (env: plcType env): plcType =
           case (opr, t1) of
               ("print", _)             => ListT []
             | ("!", BoolT)             => BoolT
-            | (("hd" | "tl"), SeqT ts) => ts
+            | ("hd", SeqT ts) => ts
+            | ("tl", SeqT ts) => SeqT ts
             | (("hd" | "tl"), _)       => raise OpNonList
             | ("-", IntT)              => IntT
             | ("ise", SeqT _)          => BoolT
@@ -138,21 +139,6 @@ fun teval (e: expr) (env: plcType env): plcType =
           else t1
         end
 
-    (* | Match(e1, e2) =>
-        (case l of
-            [] => raise NoMatchResults
-          | _  => 
-            let
-              val conditions_types = map(fn (SOME cond,_) => teval cond env | (_,_) => raise UnknownType) l
-              val return_types = map(fn (_,res) => teval res env) l
-              val expression_type = teval v env
-            in
-              if not (allEquals conditions_types) then raise MatchCondTypesDiff
-              else if expression_type = hd conditions_types then raise DiffBrTypes
-              else if not (allEquals return_types) then raise MatchResTypeDiff
-              else hd return_types
-            end) *)
-
     | Match (e1, e2) =>
         (case e2 of
             [] => raise NoMatchResults
@@ -168,21 +154,28 @@ fun teval (e: expr) (env: plcType env): plcType =
                 case cond_types of
                     NONE => false
                   | SOME value => not (expr_type = value) 
-              then raise DiffBrTypes
+              then raise MatchCondTypesDiff 
               else if not(allEquals return_types) then raise MatchResTypeDiff
               else hd return_types
             end)
-
-    | Call (e1, e2) =>
+    
+    | Call (Var(e2), e1) =>
         let
-          val t1 = teval e1 env
-          val t2 = teval e2 env
+            val mayBeFunType = lookup env e2;
+            val t1 = teval e1 env;
+        in 
+            case mayBeFunType of FunT(argT, retT) => if t1 = argT then retT else raise CallTypeMisM 
+                | _ => raise NotFunc
+        end 
+    | Call (Call(e1), e2) =>    
+        let
+          val t1 = teval (Call(e1)) env
         in
           case t1 of
-              FunT(t, tr) => if t = t2 then tr else raise CallTypeMisM
-            | _             => raise NotFunc
+              FunT(_, tr) => tr
+            | _           => raise NotFunc
         end 
-
+    | Call (_, _) => raise NotFunc
     | List(e1) =>
         (case e1 of
             [] => ListT []

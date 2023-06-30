@@ -1,6 +1,5 @@
 (* PlcInterp *)
 
-exception ThisImpossible
 exception Impossible
 exception HDEmptySeq
 exception TLEmptySeq
