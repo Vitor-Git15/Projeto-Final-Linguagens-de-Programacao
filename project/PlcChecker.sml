@@ -39,7 +39,10 @@ fun teval (e: expr) (env: plcType env): plcType =
 
     | ConB b => BoolT
 
-    | ESeq t => SeqT t
+    | ESeq t => 
+        (case t of
+            SeqT s => SeqT s
+          | _ => raise EmptySeq)
 
     | Var x => lookup env x
 
@@ -82,14 +85,26 @@ fun teval (e: expr) (env: plcType env): plcType =
               (("*" | "/" | "+" | "-"), IntT, IntT) => IntT
             | (";", _, _) => t2
             | (("<" | "<="), IntT, IntT) => BoolT
-            | ("::", _, SeqT t1) => SeqT t1
-            | ("::", _, _) => raise NotEqTypes
+            | ("::", t1, t2) =>
+                (case (t1, t2) of
+                    (IntT, ListT []) => SeqT IntT
+                  | (BoolT, ListT []) => SeqT BoolT
+                  | (IntT, SeqT s) => if s = IntT then SeqT IntT else raise NotEqTypes
+                  | (BoolT, SeqT s) => if s = BoolT then SeqT BoolT else raise NotEqTypes
+                  | (ListT l, ListT []) => SeqT (ListT l)
+                  | (ListT l, SeqT s) => if s = ListT l then SeqT s else raise NotEqTypes
+                  | _ => raise UnknownType
+                  ) 
             | ("&&", BoolT, BoolT) => BoolT
             | ("&&", _, _) => raise NotEqTypes
-            | (("=" | "!="), _, t1) => 
-                if (checkEqualityOperatorDefined t1)
-                then BoolT
-                else raise NotEqTypes
+            | (("=" | "!="), t1, t2) => 
+                if t1 = t2
+                then
+                  if (checkEqualityOperatorDefined t1)
+                  then BoolT
+                  else raise UnknownType
+                else
+                  raise NotEqTypes
             | _ => raise UnknownType
         end
     
@@ -99,8 +114,8 @@ fun teval (e: expr) (env: plcType env): plcType =
           val t1 = teval e1 env
           val t2 = teval e2 env
         in 
-          if not (tc = BoolT) then raise IfCondNotBool
-          else if not (t1 = t2) then raise DiffBrTypes
+          if (tc <> BoolT) then raise IfCondNotBool
+          else if (t1 <> t2) then raise DiffBrTypes
           else t1
         end
 
@@ -127,11 +142,11 @@ fun teval (e: expr) (env: plcType env): plcType =
           case t1 of
               FunT(t, tr) => if t = t2 then tr else raise CallTypeMisM
             | _             => raise NotFunc
-        end (* verificar *)
+        end 
 
     | List(e1) =>
         (case e1 of
-            [] => raise EmptySeq
+            [] => ListT []
           | _  => ListT (map(fn x => teval x env) e1))
 
     | Item(i, e1) =>

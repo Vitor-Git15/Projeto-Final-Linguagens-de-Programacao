@@ -1,5 +1,6 @@
 (* PlcInterp *)
 
+exception ThisImpossible
 exception Impossible
 exception HDEmptySeq
 exception TLEmptySeq
@@ -13,7 +14,7 @@ fun eval (e: expr) (env: plcVal env): plcVal =
 
     | ConB b => BoolV b
 
-    | ESeq s => SeqV []
+    | ESeq _ => SeqV []
       
     | Var x => lookup env x
     
@@ -60,9 +61,15 @@ fun eval (e: expr) (env: plcVal env): plcVal =
                   | (ListV _, SeqV s)  => SeqV(v1::s)
                   | _ => raise Impossible)
             | ("=", IntV i1, IntV i2)    => BoolV(i1 = i2)
-						| ("<", IntV i1, IntV i2)    => BoolV(i1 < i2)
+						| ("=", BoolV b1, BoolV b2)    => BoolV(b1 = b2)
+            | ("=", ListV [], ListV [])    => BoolV(true)
+            | ("=", SeqV [], SeqV [])    => BoolV(true)
+            | ("<", IntV i1, IntV i2)    => BoolV(i1 < i2)
 						| ("<=", IntV i1, IntV i2)   => BoolV(i1 <= i2)
 						| ("!=", IntV i1, IntV i2)   => BoolV(i1 <> i2)
+            | ("!=", BoolV b1, BoolV b2)    => BoolV(b1 <> b2)
+            | ("!=", SeqV [], SeqV [])    => BoolV(false)
+            | ("!=", ListV [], ListV [])    => BoolV(false)
             | ("&&", BoolV b1, BoolV b2) => BoolV(b1 andalso b2)
             | _ => raise Impossible
         end
@@ -107,20 +114,20 @@ fun eval (e: expr) (env: plcVal env): plcVal =
 
     | Call(e1,e2) => 
       let 
-        val v1 = eval e1 env
-
+      
         fun evalArgs (List []) = []
-          | evalArgs (List([x])) = [eval x env]
-          | evalArgs (List(h::t)) = [eval h env] @ evalArgs (List t)
-          | evalArgs _ = raise Impossible
-
+          | evalArgs (List [x]) = [eval x env]
+          | evalArgs (List (h::t)) = [eval h env] @ evalArgs (List t)
+          | evalArgs x = [eval x env]
+        
         val env' = [("$list", ListV (evalArgs e2))] @ env
+        val v1 = eval e1 env
       in
         case v1 of
-            Clos(f, var, e, env') => 
+            Clos(f, var, e, cenv) => 
               let
                 val v2 = eval e2 env'
-                val env'' = (var, v2)::(f, v1)::env'
+                val env'' = (var, v2)::(f, v1)::cenv
               in
                 eval e env''
               end

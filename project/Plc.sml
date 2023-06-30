@@ -21,11 +21,12 @@ fun run (e: expr) =
        | CallTypeMisM          => "PLC Checker: Type mismatch in function call."
        | ListOutOfRange        => "PLC Checker: List index out of range."
        | OpNonList             => "PLC Checker: Selection with operator # applied to non-list."
-       | NotAFunc              => "teval CALL: Not a function."
-       | NotFunc               => "eval CALL: Not a function."
+       | NotAFunc              => "eval CALL: Not a function."
+       | NotFunc               => "teval CALL: Not a function."
        | Impossible            => "PLC Interp: Impossible evaluate expression."
        | HDEmptySeq            => "PLC Interp: 'hd' empty sequence argument."
        | TLEmptySeq            => "PLC Interp: 'tl' empty sequence argument."
        | ValueNotFoundInMatch  => "PLC Interp: Value not found in match."
+       | ThisImpossible        => "-------------------IS THIS----------------------"
        | _                     => "Unexpected exception.";
        

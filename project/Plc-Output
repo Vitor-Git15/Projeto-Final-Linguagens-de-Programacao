@@ -2,11 +2,11 @@
 2. 120 : Int
 3. <fun> : Int -> Int
 4. [2, 8, 6, 720, ] : [Int]
-5. [2, 8, 6, 720, ] : [Int]
-6. [3, 2, 1, ] : [Int]
-7. [3, 2, 1, ] : [Int]
+5. PLC Checker: Unknown operator, or type error.
+6. PLC Checker: Type mismatch in function call.
+7. PLC Checker: Unknown operator, or type error.
 8. [1, 2, 3, ] : [Int]
-9. ([20, 40, 60, ], [22, 42, 62, ], ) : ([Int], [Int], )
+9. PLC Checker: Type mismatch in function call.
 10. 1 : Int
 11. true : Bool
 12. <fun> : (Int -> Int) -> Int
@@ -23,7 +23,7 @@
 23. 21 : Int
 24. 9 : Int
 25. (4, 7, ) : (Int, Int, )
-26. 30 : Int
+26. PLC Checker: Unknown operator, or type error.
 27. 9 : Int
 28. 10 : Int
 29. 1 : Int
@@ -33,73 +33,3 @@
 33. 10 : Int
 34. true : Bool
 35. 6 : Int
-1. PLC Interp: Impossible evaluate expression.
-2. PLC Interp: Impossible evaluate expression.
-3. <fun> : Int -> Int
-4. PLC Interp: Impossible evaluate expression.
-5. PLC Checker: Unknown operator, or type error.
-6. PLC Checker: Type mismatch in function call.
-7. PLC Checker: Unknown operator, or type error.
-8. [1, 2, 3, ] : [[Int]]
-9. PLC Checker: Type mismatch in function call.
-10. 1 : [Int]
-11. PLC Interp: Impossible evaluate expression.
-12. <fun> : (Int -> Int) -> Int
-13. <fun> : (Int -> Int) -> Int
-14. [1, 2, ] : [[Int]]
-15. (1, false, ) : (Int, Bool, )
-16. PLC Interp: Impossible evaluate expression.
-17. PLC Checker: Empty sequence should have a sequence type.
-18. (5, ~3, (5, 5, ), ) : (Int, Int, (Int, Int, ), )
-19. PLC Interp: Impossible evaluate expression.
-20. PLC Interp: Impossible evaluate expression.
-21. false : Bool
-22. () : Nil
-23. PLC Interp: Impossible evaluate expression.
-24. PLC Interp: Impossible evaluate expression.
-25. PLC Interp: Impossible evaluate expression.
-26. PLC Checker: Unknown operator, or type error.
-27. PLC Interp: Impossible evaluate expression.
-28. 10 : Int
-29. PLC Interp: Impossible evaluate expression.
-30. 12 : Int
-31. PLC Interp: Impossible evaluate expression.
-32. PLC Interp: Impossible evaluate expression.
-33. PLC Interp: Impossible evaluate expression.
-34. PLC Interp: Impossible evaluate expression.
-35. PLC Interp: Impossible evaluate expression.
-1. PLC Interp: Impossible evaluate expression.
-2. PLC Interp: Impossible evaluate expression.
-3. <fun> : Int -> Int
-4. PLC Interp: Impossible evaluate expression.
-5. PLC Checker: Unknown operator, or type error.
-6. PLC Checker: Type mismatch in function call.
-7. PLC Checker: Unknown operator, or type error.
-8. [1, 2, 3, ] : [[Int]]
-9. PLC Checker: Type mismatch in function call.
-10. 1 : [Int]
-11. PLC Interp: Impossible evaluate expression.
-12. <fun> : (Int -> Int) -> Int
-13. <fun> : (Int -> Int) -> Int
-14. [1, 2, ] : [[Int]]
-15. (1, false, ) : (Int, Bool, )
-16. PLC Interp: Impossible evaluate expression.
-17. PLC Checker: Empty sequence should have a sequence type.
-18. (5, ~3, (5, 5, ), ) : (Int, Int, (Int, Int, ), )
-19. PLC Interp: Impossible evaluate expression.
-20. PLC Interp: Impossible evaluate expression.
-21. false : Bool
-22. () : Nil
-23. PLC Interp: Impossible evaluate expression.
-24. PLC Interp: Impossible evaluate expression.
-25. PLC Interp: Impossible evaluate expression.
-26. PLC Checker: Unknown operator, or type error.
-27. PLC Interp: Impossible evaluate expression.
-28. 10 : Int
-29. PLC Interp: Impossible evaluate expression.
-30. 12 : Int
-31. PLC Interp: Impossible evaluate expression.
-32. PLC Interp: Impossible evaluate expression.
-33. PLC Interp: Impossible evaluate expression.
-34. PLC Interp: Impossible evaluate expression.
-35. PLC Interp: Impossible evaluate expression.
