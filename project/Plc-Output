@@ -2,9 +2,9 @@
 2. 120 : Int
 3. <fun> : Int -> Int
 4. [2, 8, 6, 720, ] : [Int]
-5. PLC Checker: Unknown operator, or type error.
+5. [2, 8, 6, 720, ] : [Int]
 6. PLC Checker: Type mismatch in function call.
-7. PLC Checker: Unknown operator, or type error.
+7. PLC Checker: Type mismatch in function call.
 8. [1, 2, 3, ] : [Int]
 9. PLC Checker: Type mismatch in function call.
 10. 1 : Int
@@ -23,7 +23,7 @@
 23. 21 : Int
 24. 9 : Int
 25. (4, 7, ) : (Int, Int, )
-26. PLC Checker: Unknown operator, or type error.
+26. 30 : Int
 27. 9 : Int
 28. 10 : Int
 29. 1 : Int

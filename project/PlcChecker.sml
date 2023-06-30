@@ -21,6 +21,25 @@ fun allEquals (l: plcType list): bool =
     List.all (fn x => x = target) l
   end
 
+fun allEqualOrNone xs =
+  let
+    fun checkList [] = true
+      | checkList (x::xs) =
+          case xs of
+            [] => true
+          | y::ys => (x = y orelse y = NONE) andalso checkList xs
+  in
+    case xs of
+      [] => true
+    | x::xs => checkList xs
+  end
+
+fun list_type l =
+  case l of
+      [] => NONE
+    | NONE::xt => list_type xt
+    | x::_ => x
+
 fun checkEqualityOperatorDefined (t: plcType) = 
   case t of
       IntT         => true
@@ -119,7 +138,7 @@ fun teval (e: expr) (env: plcType env): plcType =
           else t1
         end
 
-    | Match(v, l) =>
+    (* | Match(e1, e2) =>
         (case l of
             [] => raise NoMatchResults
           | _  => 
@@ -131,6 +150,26 @@ fun teval (e: expr) (env: plcType env): plcType =
               if not (allEquals conditions_types) then raise MatchCondTypesDiff
               else if expression_type = hd conditions_types then raise DiffBrTypes
               else if not (allEquals return_types) then raise MatchResTypeDiff
+              else hd return_types
+            end) *)
+
+    | Match (e1, e2) =>
+        (case e2 of
+            [] => raise NoMatchResults
+          | _ =>
+            let 
+              val expr_type = teval e1 env
+              val conditions_types = map(fn (SOME cond,_) => SOME (teval cond env) | (NONE,_) => NONE) e2
+              val cond_types = list_type conditions_types
+              val return_types = map(fn (_,res) => teval res env) e2
+            in
+              if not (allEqualOrNone conditions_types) then raise MatchCondTypesDiff
+              else if 
+                case cond_types of
+                    NONE => false
+                  | SOME value => not (expr_type = value) 
+              then raise DiffBrTypes
+              else if not(allEquals return_types) then raise MatchResTypeDiff
               else hd return_types
             end)
 
